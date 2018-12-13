@@ -53,7 +53,8 @@ export default {
             if(this.isvalid == 'click'){
                 this.$store.state.btnlink = 'Pay with e-Wallet'
                 this.$store.state.linkto = '/finish'
-                // this.isvalid = 'click'
+            }else if(this.isvalid == ''){
+                //show error via store (push an error message to state)
             }
             
         }
