@@ -1,7 +1,14 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedState from 'vuex-persistedstate'
+import VuexPersist from 'vuex-persist'
 
-Vue.use(Vuex)
+
+Vue.use(Vuex);
+const vuexPersist = new VuexPersist({
+  key: 'my-app',
+  storage: localStorage
+})
 
 export const store = new Vuex.Store({
     state: {
@@ -43,9 +50,21 @@ export const store = new Vuex.Store({
           address: '',
           droname: '',
           drophone: ''
-        }
-    },
-    getters: {
+        },
+        ewalletsaldo: 1500000,
+        estimate: '',
+        dayestimate: ['today', '2 days', '1 day'],
+        courierchose: '',
+        courier: ['GO-SEND', 'JNE', 'Personal Courier'],
+        courierprices: [15000, 9000, 29000],
+        pricechose: '',
+        payment: '',
+        paymethod: ['e-Wallet', 'Bank Transfer', 'Virtual Account'],
+        by: '',
+        shipment: ''
+        },
+    // getters: {
         
-    }
+    // },
+    plugins: [vuexPersist.plugin]
 })
