@@ -8,33 +8,57 @@
       <div class="summary__total">
         <div class="summary__cost">
             <p>Cost of goods</p>
-            <p>500,000</p>
-            <p>{{dropFee.title}}</p>
-            <p>{{dropFee.cost}}</p>
+            <p>{{cost}}</p>
+            <p>{{dropTitle}}</p>
+            <p>{{dropFee}}</p>
             <h1>Total</h1>
-            <h1>{{totalcost}}</h1>
+            <h1>{{totalcomp}}</h1>
         </div>
-        <button>Continue to payment</button>
+        <router-link v-bind:to="linkto" v-bind:event="isvalid"><button @click="changebtn">{{link}}</button></router-link>
       </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: {
-    purchased:{
-        type: Number,
-        required: true
+    computed: {
+        purchased(){
+            return this.$store.state.purchased;
+        },
+        cost(){
+            return this.$store.state.cost.toLocaleString()
+        },
+        dropTitle(){
+            return this.$store.state.dropFee.title
+        },
+        dropFee(){
+            return this.$store.state.dropFee.cost.toLocaleString()
+        },
+        totalcomp(){
+            return this.$store.state.totalcost.toLocaleString()
+        },
+        link(){
+            return this.$store.state.btnlink;
+        },
+        linkto(){
+            return this.$store.state.linkto;
+        },
+        isvalid(){
+            return this.$store.state.isvalid;
+        }
     },
-    dropFee:{
-        type: Object,
-        required: true
-    },
-    totalcost:{
-        type: Number,
-        
+
+    methods:{
+        changebtn(){
+            if(this.isvalid == 'click'){
+                this.$store.state.btnlink = 'Pay with e-Wallet'
+                this.$store.state.linkto = '/finish'
+                // this.isvalid = 'click'
+            }
+            
+        }
     }
-  }
+    
 }
 </script>
 
@@ -56,6 +80,7 @@ export default {
             }
         }
         .summary__total{
+            width: 100%;
             align-self: end;
             .summary__cost{
                 display: grid;
@@ -74,6 +99,9 @@ export default {
                     margin-top: 20px;
                     font-weight: bold;
                     color: #ff8a00;
+                    &:nth-child(even){
+                        justify-self: end;
+                    }
                 }
             }
             button{

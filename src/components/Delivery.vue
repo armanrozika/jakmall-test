@@ -48,7 +48,7 @@
       </div>
 
       <div class="delivery__summary">
-        <app-summary v-bind:purchased="purchased" v-bind:dropFee="dropFee" v-bind:totalcost="totalcost"></app-summary>
+        <app-summary></app-summary>
       </div>
     </div>
    
@@ -61,60 +61,58 @@ export default {
   components: {
     'app-summary': summary,
   },
-  data(){
-    return {
-      purchased: 10,
-      cost: 500000,
-      dropFee:{
-        title: '',
-        cost: ''
-      },
-      totalcost: 500000,
-      checked: false,
-      addrcount:{
-        used: 0,
-        left: 120
-      },
-      valid: {
-        nameval: false,
-        emailval: false,
-        phoneval: false,
-        addressval: false,
-        droname: false,
-        drophone: false
-      },
-      notvalid: {
-        nameval: false,
-        emailval: false,
-        phoneval: false,
-        addressval: false,
-        droname: false,
-        drophone: false
-      },
-      user: {
-        name: '',
-        phone: '',
-        email: '',
-        address: '',
-        droname: '',
-        drophone: ''
-      }
+  computed: {
+    checked(){
+      return this.$store.state.checked;
+    },
+    dropFee(){
+      return this.$store.state.dropFee;
+    },
+    cost(){
+      return this.$store.state.cost;
+    },
+    totalcost(){
+      return this.$store.state.totalcost;
+    },
+    user(){
+      return this.$store.state.user;
+    },
+    valid(){
+      return this.$store.state.valid;
+    },
+    notvalid(){
+      return this.$store.state.notvalid;
+    },
+    addrcount(){
+      return this.$store.state.addrcount;
+    },
+    purchased(){
+      return this.$store.state.purchased;
+    },
+    btnlink(){
+      return this.$store.state.btnlink;
+    },
+    isvalid(){
+      return this.$store.state.isvalid;
     }
+    
   },
- 
   methods: {
     isChecked(){
-      this.checked = this.checked ? false: true;
+      this.$store.state.checked = this.$store.state.checked ? false: true
       if(this.checked){
-        this.dropFee.title = 'Delifery Fee';
-        this.dropFee.cost = 5900
+        this.$store.state.dropFee.title = 'Dropshipping Fee';
+        this.$store.state.dropFee.cost = 5900
       }else{
-        this.dropFee.title = '';
-        this.dropFee.cost = ''
+        this.$store.state.dropFee.title = '';
+        this.$store.state.dropFee.cost = ''
       }
-      //totalcost
-      this.totalcost = parseInt(this.cost + this.dropFee.cost) 
-      
+      if(this.user.droname == '' || this.user.drophone == ''){
+        this.$store.state.isvalid = ''
+      }
+     
+      this.$store.state.totalcost = parseInt(this.cost + this.dropFee.cost);
+      //console.log(this.$store.state.user.name)
     },
     validate(){
       //validate user name
@@ -158,6 +156,7 @@ export default {
       }
       this.addrcount.used = this.user.address.length;
 
+     
       //validate dropship name
       if(this.user.droname == ''){
         this.valid.droname = false;
@@ -166,7 +165,7 @@ export default {
         this.valid.droname = true;
         this.notvalid.droname = false
       }
-      //validate dropship phon
+      //validate dropship phone
       let isValidPhoneDrop = phoneRegex.test(this.user.drophone);
       if(!isValidPhoneDrop){
         this.valid.drophone = false;
@@ -175,9 +174,21 @@ export default {
         this.valid.drophone = true;
         this.notvalid.drophone = false
       }
-    }
-  }
-  
+
+       if(this.user.name == '' || !emailIsValid || !phoneIsValid || this.user.address.length > 120 || this.user.address == ''){
+        this.$store.state.isvalid = ''
+      }else if(this.checked){
+        console.log(12)
+        if(this.user.droname == '' || !isValidPhoneDrop){
+          this.$store.state.isvalid = ''
+        }else{
+          this.$store.state.isvalid = 'click'
+        }
+      }else if(this.checked == false){
+        this.$store.state.isvalid = 'click'
+      }
+    },
+  } 
 }
 </script>
 
@@ -188,6 +199,7 @@ export default {
   }
   .delivery{
     padding: 40px;
+    height: 100%;
     .delivery__out{
       display: flex;
       align-items: center;
@@ -195,6 +207,7 @@ export default {
     }
     .delivery__grid{
       display: grid;
+      height: 80%;
       grid-template-columns: 3fr 2fr 2fr;
       grid-gap: 25px;
       margin-top: 20px;

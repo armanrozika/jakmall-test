@@ -9,7 +9,7 @@
         <li><p>3</p>Finish</li>
       </ul>
       <div class="root__content">
-        <Delivery/>
+        <router-view></router-view>
       </div>
     </div>
     
@@ -17,13 +17,7 @@
 </template>
 
 <script>
-import Delivery from './components/Delivery.vue'
-
 export default {
-  components: {
-    Delivery,
-  }
-  
 }
 </script>
 
@@ -48,9 +42,9 @@ export default {
         transform: translateY(50%);
         width: 45%;
         background: #fffae6;
-        padding: 20px 30px;
+        padding: 0 30px 20px 30px;
         border-radius: 30px;
-        margin: 0 auto;
+        margin: 0 auto; 
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -79,6 +73,7 @@ export default {
       }
       .root__content{
         width: 100%;
+        height: 80vh;
         background: #fff;
         box-shadow: 0px 7px 30px #fbebd6;
         border-radius: 5px;
