@@ -5,7 +5,7 @@
         <h1>Thank You</h1>
         <h2>Order ID : {{randomize}}</h2>
         <p>Your order will be delivered {{estimate}} with {{courierchose}}</p>
-        <router-link to="/" @click.native="resetstate">homepage</router-link>
+        <router-link class="home" to="/" @click.native="resetstate">&larr; Go to homepage</router-link>
       </div>
       <app-summary v-bind:paytitle="paytitle" v-bind:paymethod="paymethod" v-bind:linkto="linkto" v-bind:hide="hide" v-bind:estimation="estimation"></app-summary>
     </div>
@@ -108,9 +108,18 @@
 </script>
 
 <style scoped lang="scss">
+@mixin if-lessThan-768px{
+		@media (max-width: 768px){
+			@content;
+		}
+	}
   .finish{
     padding: 40px;
     height: 100%;
+    @include if-lessThan-768px{
+        padding: 25px;
+        height: auto;
+    }
     .finish__grid{
       display: grid;
       grid-template-columns: 3fr 2fr 2fr;
@@ -119,8 +128,16 @@
       margin-top: 20px;
       align-items: center;
       justify-items: center;
+      @include if-lessThan-768px{
+          grid-template-columns: 1fr;
+          grid-gap: 5px;
+          height: 100%;
+      }
       .finish__details{
         grid-column: 1/3;
+        @include if-lessThan-768px{
+          margin-bottom: 1px;
+        }
         h1{
           padding-bottom: -5px;
           margin-bottom: 25px;
@@ -139,6 +156,18 @@
               z-index: -1;
               bottom: 2px;
           }
+        }
+        h2{
+          font-size: 18px;
+          font-weight: bold;
+        }
+        p{
+          font-size: 15px;
+          margin-bottom: 20px;
+        }
+        .home{
+          font-size: 15px;
+          color: #616161;
         }
       }
     }

@@ -78,11 +78,12 @@ export default {
             this.$store.state.estimate = this.$store.state.dayestimate[el-1];
             this.$store.state.courierchose = this.$store.state.courier[el-1];
             this.$store.state.pricechose = this.$store.state.courierprices[el-1];
-            this.$store.state.payment = this.$store.state.paymethod[el-1]
+           
         },
         payfunc(el){
             this.active_ship = el;
             this.btntitle = this.changebtn[el-1]
+            this.$store.state.payment = this.$store.state.paymethod[el-1]
         },
         changelink(){
             //console.log(this.$store.state.linkto = '/payment')
@@ -114,17 +115,31 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@mixin if-lessThan-768px{
+		@media (max-width: 768px){
+			@content;
+		}
+	}
     .payment{
         padding: 40px;
         height: 100%;
+        @include if-lessThan-768px{
+            padding: 25px;
+        }
         .fa{
             font-size: 13px;
             margin-right: 10px;
+             @include if-lessThan-768px{
+                font-size: 12px;
+            }
         }
         .payment__out{
             display: flex;
             align-items: center;
             color: #656567;
+             @include if-lessThan-768px{
+                font-size: 12px;
+            }
         }
         .payment__grid{
             display: grid;
@@ -132,6 +147,11 @@ export default {
             grid-template-columns: 3fr 2fr 2fr;
             grid-gap: 25px;
             margin-top: 20px;
+            @include if-lessThan-768px{
+                grid-template-columns: 1fr;
+                grid-gap: 5px;
+                height: 100%;
+            }
             .payment__details{
               grid-column: 1/3;
                 h1{
@@ -142,6 +162,9 @@ export default {
                     font-size: 27px;
                     position: relative;
                     z-index: 1;
+                    @include if-lessThan-768px{
+                        font-size: 20px;
+                    }
                     &::after{
                         position: absolute;
                         content: ' ';
@@ -159,6 +182,10 @@ export default {
                     grid-template-columns: repeat(3, 1fr);
                     grid-gap: 20px;
                     margin-bottom: 65px;
+                     @include if-lessThan-768px{
+                        width: 100%;
+                         grid-gap: 5px;
+                    }
                     .payment__courier{
                         height: 55px;
                         display: grid;
@@ -169,6 +196,10 @@ export default {
                         position: relative;
                         p{
                             font-size: 13px;
+                            @include if-lessThan-768px{
+                               font-size: 10px;
+                            }
+                            
                         }
                     }
                      .active{

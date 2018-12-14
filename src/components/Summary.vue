@@ -107,20 +107,34 @@ export default {
 </script>
 
 <style scoped lang="scss">
+ @mixin if-lessThan-768px{
+		@media (max-width: 768px){
+			@content;
+		}
+	}
     .summary{
         display: flex;
         flex-direction: column;
         height: 100%;
         justify-content: space-between;
         .summary__purchased{
+             @include if-lessThan-768px{
+                    margin-bottom: 20px;
+                }
             h1{
-            font-size: 20px;
-            font-weight: bold;
-            color: #ff8a00;
+                font-size: 20px;
+                font-weight: bold;
+                color: #ff8a00;
+                @include if-lessThan-768px{
+                    font-size: 15px;
+                }
             }
             p{
                 font-size: 16px;
                 color: #656567;
+                @include if-lessThan-768px{
+                    font-size: 12px;
+                }
             }
         }
         .summary__estimation{
@@ -147,6 +161,9 @@ export default {
                 display: grid;
                 grid-template-columns: 3fr 1fr;
                 margin-bottom: 10px;
+                @include if-lessThan-768px{
+                     margin-top: 20px;
+                }
                 p{
                     font-size: 12px;
                     margin-bottom: 5px;

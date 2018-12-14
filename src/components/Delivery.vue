@@ -13,18 +13,25 @@
           <div class="group" :class="{valid: valid.nameval, notvalid: notvalid.nameval}">
             <input type="text" required v-model="user.name" @keyup="validate" spellcheck="false">
             <label>Name</label>
+            <p v-if="user.name == ''">harus diisi</p>
           </div>
           <div class="group" :class="{valid: valid.emailval, notvalid: notvalid.emailval}">
             <input type="text" required v-model="user.email" @keyup="validate" spellcheck="false">
             <label>Email</label>
+            <p v-if="user.email == ''">harus diisi</p>
+            <p v-if="user.email !='' && valid.emailval==false">email tidak valid</p>
           </div>
           <div class="group" :class="{valid: valid.phoneval, notvalid: notvalid.phoneval}">
             <input type="text" required v-model="user.phone" @keyup="validate" spellcheck="false">
             <label>Phone Number</label>
+            <p v-if="user.phone == ''">harus diisi</p>
+            <p v-if="user.phone !='' && valid.phoneval==false">phone number tidak valid</p>
           </div>
           <div class="text-area" :class="{valid: valid.addressval, notvalid: notvalid.addressval}">
             <textarea spellcheck="false" placeholder="Delivery Address" required v-model="user.address" @keyup="validate"></textarea>
             <p>{{addrcount.used}}/{{addrcount.left}}</p>
+            <p v-if="user.address == ''">harus diisi</p>
+            <p v-if="user.address !='' && addrcount.used>120">maksimal 120 karakter</p>
           </div>
           
         </div>
@@ -39,10 +46,13 @@
           <div class="group" :class="{valid: valid.droname, notvalid: notvalid.droname}">
             <input type="text" required v-model="user.droname" @keyup="validate" spellcheck="false">
             <label>Dropshipper Name</label>
+            <p v-if="user.droname == ''">harus diisi</p>
           </div>
           <div class="group" :class="{valid: valid.drophone, notvalid: notvalid.drophone}">
             <input type="text" required v-model="user.drophone" @keyup="validate" spellcheck="false">
             <label>Dropshipper Phone Number</label>
+            <p v-if="user.drophone == ''">harus diisi</p>
+            <p v-if="user.drophone !='' && valid.drophone==false">phone number tidak valid</p>
           </div>
         </div>
       </div>
@@ -61,7 +71,8 @@ export default {
   data(){
     return {
       btntitle: 'Continue to payment',
-      linkto: '/payment'
+      linkto: '/payment',
+      show: false
     }
   },
   components: {
@@ -124,7 +135,8 @@ export default {
       //console.log(this.$store.state.user.name)
     },
     validate(){
-      console.log(this.$store.state)
+      
+      //console.log(this.$store.state)
       //validate user name
       if(this.user.name == ''){
         this.notvalid.nameval = true;
@@ -134,10 +146,10 @@ export default {
         this.valid.nameval = true;
       }
 
-      //validate user email
+      //validate user email || !emailIsValid
       const emailRegex = /^[a-z]+((_|\.|-)?[a-z\d]+)*@[a-z\d]+((-)?[a-z\d]+)*\.[a-z]{2,8}(\.[a-z]{2,8})?$/;
       let emailIsValid = emailRegex.test(this.user.email)
-      if(!emailIsValid){
+      if(this.user.email == '' || !emailIsValid){
         this.notvalid.emailval = true;
         this.valid.emailval= false
       }else{
@@ -145,10 +157,11 @@ export default {
         this.valid.emailval = true
       }
 
-      //validate user phone
+
+      //validate user phone || !phoneIsValid
       const phoneRegex = /^(0|\+62|\(\d{3,4}\))[\d\-]{5,19}$/;
       let phoneIsValid = phoneRegex.test(this.user.phone);
-      if(!phoneIsValid){
+      if(this.user.phone == '' || !phoneIsValid){
         this.notvalid.phoneval = true;
         this.valid.phoneval = false;
       }else{
@@ -156,8 +169,8 @@ export default {
         this.valid.phoneval = true;
       }
 
-      //validate address
-      if(this.user.address.length > 120 || this.user.address == ''){
+      //validate address this.user.address.length > 120 || 
+      if(this.user.address == '' || this.user.address.length > 120){
         this.notvalid.addressval = true;
         this.valid.addressval = false;
       }else{
@@ -175,9 +188,9 @@ export default {
         this.valid.droname = true;
         this.notvalid.droname = false
       }
-      //validate dropship phone
+      //validate dropship phone || !isValidPhoneDrop
       let isValidPhoneDrop = phoneRegex.test(this.user.drophone);
-      if(!isValidPhoneDrop){
+      if(this.user.drophone =='' || !isValidPhoneDrop){
         this.valid.drophone = false;
         this.notvalid.drophone = true
       }else{
@@ -188,7 +201,7 @@ export default {
        if(this.user.name == '' || !emailIsValid || !phoneIsValid || this.user.address.length > 120 || this.user.address == ''){
         this.$store.state.isvalid = ''
       }else if(this.checked){
-        console.log(12)
+        //console.log(12)
         if(this.user.droname == '' || !isValidPhoneDrop){
           this.$store.state.isvalid = ''
         }else{
@@ -203,17 +216,31 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@mixin if-lessThan-768px{
+		@media (max-width: 768px){
+			@content;
+		}
+	}
   .fa{
     font-size: 13px;
     margin-right: 10px;
+    @include if-lessThan-768px{
+        font-size: 12px;
+      }
   }
   .delivery{
     padding: 40px;
     height: 100%;
+    @include if-lessThan-768px{
+      padding: 25px;
+    }
     .delivery__out{
       display: flex;
       align-items: center;
       color: #656567;
+      @include if-lessThan-768px{
+        font-size: 12px;
+      }
     }
     .delivery__grid{
       display: grid;
@@ -221,6 +248,11 @@ export default {
       grid-template-columns: 3fr 2fr 2fr;
       grid-gap: 25px;
       margin-top: 20px;
+      @include if-lessThan-768px{
+        grid-template-columns: 1fr;
+        grid-gap: 5px;
+        height: 100%;
+      }
       .delivery__details{
         h1{
           padding-bottom: -5px;
@@ -229,6 +261,9 @@ export default {
           font-size: 27px;
           position: relative;
           z-index: 1;
+          @include if-lessThan-768px{
+            font-size: 20px;
+          }
           &::after{
             position: absolute;
             content: ' ';
@@ -248,6 +283,9 @@ export default {
           align-items: center;
           justify-content: flex-end;
           color: #656567;
+          @include if-lessThan-768px{
+            font-size: 15px;
+          }
           :checked > div{
             display: block;
           }
@@ -294,6 +332,10 @@ export default {
         border: 1px solid #b8b7ba;
         padding: 10px;
         position: relative;
+        p{
+          font-size: 12px;
+          margin-top: -10px;
+        }
         input{
           padding:10px 10px 10px 5px;
           width: 100%;
@@ -346,6 +388,9 @@ export default {
           bottom: 2px;
           right: 2px;
           font-size: 12px;
+          &:nth-child(odd){
+            left: 10px;
+          }
         }
       }
 
