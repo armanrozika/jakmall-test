@@ -4,24 +4,70 @@
         <h1>Summary</h1>
         <p>{{purchased}} items purchased</p>
       </div>
-     
+         <div class="summary__estimation">
+             <p>{{estimation}}</p>
+             <h2>{{estimate}} {{by}} {{courierchose}}</h2>
+         </div>
+         <div class="summary__payment">
+            <p>{{paytitle}}</p>
+            <h2>{{paymethod}}</h2>
+         </div>
       <div class="summary__total">
         <div class="summary__cost">
             <p>Cost of goods</p>
             <p>{{cost}}</p>
             <p>{{dropTitle}}</p>
             <p>{{dropFee}}</p>
+            <p>{{courierchose}} {{shipment}}</p>
+            <p>{{pricechose}}</p>
             <h1>Total</h1>
             <h1>{{totalcomp}}</h1>
         </div>
-        <router-link v-bind:to="linkto" v-bind:event="isvalid"><button @click="changebtn">{{link}}</button></router-link>
+        <router-link v-bind:class="{hide: hide}" v-bind:to="linkto" v-bind:event="isvalid"><button @click="changebtn">{{btntitle}}</button></router-link>
       </div>
   </div>
 </template>
 
 <script>
 export default {
+    props:{
+        btntitle: {
+            type: String
+        },
+        estimation: {
+            type: String
+        },
+        linkto: {
+            type: String
+        },
+        hide: {
+            type: Boolean
+        },
+        paytitle: {
+            type: String
+        },
+        paymethod: {
+            type: String
+        }
+    },
     computed: {
+        by(){
+            return this.$store.state.by
+        },
+        shipment(){
+            return this.$store.state.shipment
+        },
+        estimate(){
+            return this.$store.state.estimate
+        },
+        courierchose(){
+            return this.$store.state.courierchose
+        },
+        pricechose(){
+            if(this.$store.state.pricechose > 0){
+                return this.$store.state.pricechose.toLocaleString()
+            }
+        },
         purchased(){
             return this.$store.state.purchased;
         },
@@ -40,9 +86,6 @@ export default {
         link(){
             return this.$store.state.btnlink;
         },
-        linkto(){
-            return this.$store.state.linkto;
-        },
         isvalid(){
             return this.$store.state.isvalid;
         }
@@ -58,7 +101,7 @@ export default {
             }
             
         }
-    }
+    },
     
 }
 </script>
@@ -80,9 +123,26 @@ export default {
                 color: #656567;
             }
         }
+        .summary__estimation{
+            h2{
+                font-size: 14px;
+                font-weight: bold;
+                color: #19d875;
+            }
+        }
+        .summary__payment{
+            h2{
+                font-size: 14px;
+                font-weight: bold;
+                color: #19d875;
+            }
+        }
         .summary__total{
             width: 100%;
             align-self: end;
+            .hide{
+                display: none;
+            }
             .summary__cost{
                 display: grid;
                 grid-template-columns: 3fr 1fr;
@@ -93,6 +153,7 @@ export default {
                     color: #656567;
                     &:nth-child(even){
                         justify-self: end;
+                        font-weight: bold;
                     }
                 }
                 h1{

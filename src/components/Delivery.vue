@@ -48,7 +48,7 @@
       </div>
 
       <div class="delivery__summary">
-        <app-summary></app-summary>
+        <app-summary v-bind:btntitle="btntitle" v-bind:linkto="linkto"></app-summary>
       </div>
     </div>
    
@@ -58,6 +58,12 @@
 <script>
 import summary from './Summary.vue'
 export default {
+  data(){
+    return {
+      btntitle: 'Continue to payment',
+      linkto: '/payment'
+    }
+  },
   components: {
     'app-summary': summary,
   },
@@ -103,18 +109,22 @@ export default {
       if(this.checked){
         this.$store.state.dropFee.title = 'Dropshipping Fee';
         this.$store.state.dropFee.cost = 5900
+        if(this.user.droname == '' || this.user.drophone == ''){
+          this.$store.state.isvalid = ''
+        }
+        
       }else{
         this.$store.state.dropFee.title = '';
         this.$store.state.dropFee.cost = ''
+        this.$store.state.isvalid = 'click'
       }
-      if(this.user.droname == '' || this.user.drophone == ''){
-        this.$store.state.isvalid = ''
-      }
+     
      
       this.$store.state.totalcost = parseInt(this.cost + this.dropFee.cost);
       //console.log(this.$store.state.user.name)
     },
     validate(){
+      console.log(this.$store.state)
       //validate user name
       if(this.user.name == ''){
         this.notvalid.nameval = true;
@@ -207,7 +217,7 @@ export default {
     }
     .delivery__grid{
       display: grid;
-      height: 80%;
+      height: 65vh;
       grid-template-columns: 3fr 2fr 2fr;
       grid-gap: 25px;
       margin-top: 20px;
@@ -269,6 +279,7 @@ export default {
         }
       }
       .delivery__summary{
+        height: 100%;
         border-left: 2px solid #fff3e5;
         padding-left: 20px;
       }
